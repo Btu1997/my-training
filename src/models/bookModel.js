@@ -10,7 +10,7 @@ const bookSchema = new mongoose.Schema( {
     
     isPublished: Boolean,
     totalPages: Number,
-    prices: {
+    price: {
         indianPrice: String,
         europePrice: String
     },
