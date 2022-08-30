@@ -93,13 +93,17 @@ const userModel = require("../models/userModel");
 // };
 //problem 1===================================================================================================
 const createUser = async function (req, res) {
+ try{
   let data = req.body;
   let savedData = await userModel.create(data);
-  res.send({ msg: savedData });
+  res.status(201).send({ msg: savedData });}
+  catch (error) {
+    res.status(500).send(error.message)
+  }
 };
 //problem 2 ======================================================================================================
 const loginUser = async function (req, res) {
-  let userName = req.body.emailId;
+ try{ let userName = req.body.emailId;
   let password = req.body.password;
 
   let user = await userModel.findOne({ emailId: userName, password: password });
@@ -119,31 +123,40 @@ const loginUser = async function (req, res) {
   );
 
   res.setHeader("x-auth-token1", token);
-  res.send({ status: true, token: token });
-};
+  res.status(200).send({ status: true, token: token });
+}
+catch (error) {
+  res.status(400).send(error.message)
+}
+}
 //problem 3 ======================================================================================================
 const getUserData = async function (req, res) {
-  let userId = req.params.userId;
+ try{ let userId = req.params.userId;
   let userDetails = await userModel.findById(userId);
   if (!userDetails)
-    return res.send({ status: false, msg: "No such user exists" });
+    return res.status(200).send({ status: false, msg: "No such user exists" });
 
-  res.send({ status: true, data: userDetails });
-};
+  res.send({ status: true, data: userDetails });}
+  catch (error) {
+    res.status(400).send(error.message)
+}
+}
 //problem 4 ========================================================================================================
 const updateUser = async function (req, res) {
-  let userId = req.params.userId;
+  try{let userId = req.params.userId;
   if(req.pass.userId == userId){
     let userData = req.body;
     let updatedUser = await userModel.findByIdAndUpdate({ _id: userId }, userData);
-    res.send({ status: updatedUser, data: updatedUser });
+    res.status(200).send({ status: updatedUser, data: updatedUser });
   }
   else{
   // let user = await userModel.findById(userId);
   // if (!user) {
-    return res.send("No such user exists");
+    return res.send("No such user exists");}
   }
-
+  catch (error) {
+    res.status(403).send(error.message)
+  }
  
 };
 //problem 5=========================================================================================================
